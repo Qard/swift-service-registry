@@ -1,0 +1,10 @@
+included:
+  - Sources
+  - Tests
+  - Package.swift
+excluded:
+  - .build
+
+# Makes diffs cleaner
+trailing_comma:
+  mandatory_comma: true

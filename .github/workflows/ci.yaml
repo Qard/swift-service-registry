@@ -1,0 +1,86 @@
+name: CI
+
+on: [push]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ubuntu-latest:
+    name: Swift ${{ matrix.swift }} on ubuntu-latest
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        swift:
+          - "5.10"
+          - "5.9"
+          - "5.8"
+          - "5.7"
+    steps:
+      - uses: swift-actions/setup-swift@v2
+        with:
+          swift-version: ${{ matrix.swift }}
+      - uses: actions/checkout@v4
+      - name: Build
+        run: swift build
+      - name: Run tests
+        run: swift test
+
+  ubuntu-20_04:
+    name: Swift ${{ matrix.swift }} on ubuntu-20.04
+    runs-on: ubuntu-20.04
+    # No official support, but good to know if it still works.
+    continue-on-error: true
+    strategy:
+      matrix:
+        swift:
+          - "5.6"
+          - "5.5"
+    steps:
+      - uses: swift-actions/setup-swift@v2
+        with:
+          swift-version: ${{ matrix.swift }}
+      - uses: actions/checkout@v4
+      - name: Build
+        run: swift build
+      - name: Run tests
+        run: swift test
+
+  macos-latest:
+    name: Swift ${{ matrix.swift }} on macos-latest
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        swift:
+          - "5.10"
+          - "5.9"
+    steps:
+      - uses: swift-actions/setup-swift@v2
+        with:
+          swift-version: ${{ matrix.swift }}
+      - uses: actions/checkout@v4
+      - name: Build
+        run: swift build
+      - name: Run tests
+        run: swift test
+
+  macos-12:
+      name: Swift ${{ matrix.swift }} on macos-12
+      # No official support, but good to know if it still works.
+      continue-on-error: true
+      runs-on: macos-12
+      strategy:
+        matrix:
+          swift:
+            - "5.8"
+            - "5.7"
+      steps:
+        - uses: swift-actions/setup-swift@v2
+          with:
+            swift-version: ${{ matrix.swift }}
+        - uses: actions/checkout@v4
+        - name: Build
+          run: swift build
+        - name: Run tests
+          run: swift test
